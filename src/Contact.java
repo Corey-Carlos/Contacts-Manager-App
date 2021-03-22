@@ -8,6 +8,10 @@ public class Contact {
         this.phoneNumber = phoneNumber;
     }
 
+    public String contactFormatter() {
+        return this.name + " | " + this.phoneNumber;
+    }
+
     public String getName() {
         return name;
     }
