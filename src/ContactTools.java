@@ -51,6 +51,15 @@ public class ContactTools {
             for (String contact : list) {
                 if (contact.toLowerCase().contains(name.toLowerCase())) {
                     System.out.println(contact);
+                } else {
+                    System.out.println("Contact does not exist");
+                    System.out.println("Would you like to try again?");
+                    String userChoice = sc.nextLine();
+                    if (userChoice.equalsIgnoreCase("y") || userChoice.equalsIgnoreCase("yes")){
+                        searchContactByName(p, list);
+                    } else {
+                        break;// Put displayMainMenu
+                    }
                 }
             }
         } catch(IOException e){
@@ -108,9 +117,9 @@ public class ContactTools {
 
 //        removeContact(p, contacts, "Corey");
 
-//        searchContactByName(p, contacts);
+        searchContactByName(p, contacts);
 
-        removeContact(p, contacts);
+//        removeContact(p, contacts);
     }
 
 
