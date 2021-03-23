@@ -60,17 +60,41 @@ public class ContactTools {
     }
 
 
-    public static void removeContact(Path p, List<String> list, String name) {
-        if (list.contains(name)) {
-            try {
-                list.remove(name);
-                Files.write(p, list, StandardOpenOption.APPEND);
-            } catch (Exception e) {
-                e.printStackTrace();
+    public static void removeContact(Path p, List<String> list) {
+        Scanner sc = new Scanner(System.in);
+        String name;
+        System.out.println("Please enter name of contact you would like to remove:");
+        name = sc.nextLine();
+        List<String> contactToBeRemoved = new ArrayList<>();
+        try {
+            list = Files.readAllLines(p);
+            for (String contact : list) {
+                if (contact.toLowerCase().contains(name.toLowerCase())) {
+                    contactToBeRemoved.add(contact);
+                    System.out.println("Contact has been removed.");
+                }
             }
+            if (contactToBeRemoved.size() == 0){
+                System.out.println("No contact by that name.");
+            }
+            list.removeAll(contactToBeRemoved);
+            Files.write(p, list);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-
     }
+
+//        public static void displayMainMenu(){
+//            System.out.println("1. View contacts.\n" +
+//                    "  2. Add a new contact.\n" +
+//                    "  3. Search a contact by name.\n" +
+//                    "  4. Delete an existing contact.\n" +
+//                    "  5. Exit.\n" +
+//                    "\n" +
+//                    "  Enter an option (1, 2, 3, 4 or 5):");
+//        }
+
+
 
 
 
@@ -84,7 +108,9 @@ public class ContactTools {
 
 //        removeContact(p, contacts, "Corey");
 
-        searchContactByName(p, contacts);
+//        searchContactByName(p, contacts);
+
+        removeContact(p, contacts);
     }
 
 
