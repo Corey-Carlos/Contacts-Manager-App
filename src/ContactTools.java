@@ -40,6 +40,25 @@ public class ContactTools {
         }
     }
 
+    public static void searchContactByName(Path p, List<String> list){
+        Scanner sc = new Scanner(System.in);
+        String name;
+        System.out.println("Search contact by name!");
+        System.out.println("Please enter name: ");
+        name = sc.nextLine();
+        try{
+            list = Files.readAllLines(p);
+            for (String contact : list) {
+                if (contact.toLowerCase().contains(name.toLowerCase())) {
+                    System.out.println(contact);
+                }
+            }
+        } catch(IOException e){
+            e.printStackTrace();
+        }
+
+    }
+
 
     public static void removeContact(Path p, List<String> list, String name) {
         if (list.contains(name)) {
@@ -61,10 +80,11 @@ public class ContactTools {
         Path p = Paths.get("data", "contacts.txt");
         List<String> contacts = new ArrayList<>();
 //        showAllContacts(p, contacts);
-        addNewContact(p, contacts);
+//        addNewContact(p, contacts);
 
 //        removeContact(p, contacts, "Corey");
-//        addNewContact(p, contacts, "Justin", "12345678");
+
+        searchContactByName(p, contacts);
     }
 
 
