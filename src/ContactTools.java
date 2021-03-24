@@ -26,14 +26,11 @@ public class ContactTools {
 
 
     public static void addNewContact(Path p, List<String> list){
-        Input userInput = new Input();
-        Scanner sc = new Scanner(System.in);
-        String name;
-        String number;
+        Input input = new Input();
         System.out.println("Enter name: ");
-        name = sc.nextLine();
+        String name = input.getString();
         System.out.println("Enter phone number: ");
-        number = sc.nextLine();
+        String number = input.getString();
         Contact newContact = new Contact(name, number);
         list.add(newContact.contactFormatter());
         try{
@@ -41,9 +38,8 @@ public class ContactTools {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        System.out.println("Would you like to add another contact?");
-        String userChoice = sc.next();
-        if (userChoice.equalsIgnoreCase("y") || userChoice.equalsIgnoreCase("yes")){
+        System.out.println("Would you like to add another contact? (y/n): ");
+        if (input.yesNo()){
             addNewContact(p, list);
         } else {
             methodSelector(p, list);
@@ -144,6 +140,12 @@ public class ContactTools {
         }
     }
 
+    public static void initializeApp() {
+        Path p = Paths.get("data", "contacts.txt");
+        List<String> contacts = new ArrayList<>();
+        methodSelector(p, contacts);
+    }
+
 
 
 
@@ -157,7 +159,7 @@ public class ContactTools {
         Path p = Paths.get("data", "contacts.txt");
         List<String> contacts = new ArrayList<>();
 //        showAllContacts(p, contacts);
-        addNewContact(p, contacts);
+//        addNewContact(p, contacts);
 
 //        removeContact(p, contacts, "Corey");
 
