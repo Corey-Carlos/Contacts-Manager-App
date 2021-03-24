@@ -1,3 +1,5 @@
+import util.Input;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -24,19 +26,23 @@ public class ContactTools {
 
 
     public static void addNewContact(Path p, List<String> list){
-        Scanner sc = new Scanner(System.in);
-        String name;
-        String number;
+        Input input = new Input();
         System.out.println("Enter name: ");
-        name = sc.nextLine();
+        String name = input.getString();
         System.out.println("Enter phone number: ");
-        number = sc.nextLine();
+        String number = input.getString();
         Contact newContact = new Contact(name, number);
         list.add(newContact.contactFormatter());
         try{
             Files.write(p, list, StandardOpenOption.APPEND);
         } catch (IOException e) {
             e.printStackTrace();
+        }
+        System.out.println("Would you like to add another contact? (y/n): ");
+        if (input.yesNo()){
+            addNewContact(p, list);
+        } else {
+            methodSelector(p, list);
         }
     }
 
@@ -46,23 +52,26 @@ public class ContactTools {
         System.out.println("Search contact by name!");
         System.out.println("Please enter name: ");
         name = sc.nextLine();
+        List<String> contactToSearch = new ArrayList<>();
         try{
             list = Files.readAllLines(p);
             for (String contact : list) {
                 if (contact.toLowerCase().contains(name.toLowerCase())) {
                     System.out.println(contact);
-                } else {
+                    contactToSearch.add(contact);
+                    }
+                } if(contactToSearch.size() == 0) {
                     System.out.println("Contact does not exist");
                     System.out.println("Would you like to try again?");
                     String userChoice = sc.nextLine();
                     if (userChoice.equalsIgnoreCase("y") || userChoice.equalsIgnoreCase("yes")){
                         searchContactByName(p, list);
                     } else {
-                        break;// Put displayMainMenu
+                        methodSelector(p, list);
                     }
                 }
             }
-        } catch(IOException e){
+         catch(IOException e){
             e.printStackTrace();
         }
 
@@ -93,15 +102,52 @@ public class ContactTools {
         }
     }
 
-//        public static void displayMainMenu(){
-//            System.out.println("1. View contacts.\n" +
-//                    "  2. Add a new contact.\n" +
-//                    "  3. Search a contact by name.\n" +
-//                    "  4. Delete an existing contact.\n" +
-//                    "  5. Exit.\n" +
-//                    "\n" +
-//                    "  Enter an option (1, 2, 3, 4 or 5):");
-//        }
+        public static int displayMainMenu(){
+            Input userInput = new Input();
+
+            System.out.println(
+                    " \nWelcome to Contact Manager App\n" +
+                    "------------------------------\n" +
+                    "  1. View contacts.\n" +
+                    "  2. Add a new contact.\n" +
+                    "  3. Search a contact by name.\n" +
+                    "  4. Delete an existing contact.\n" +
+                    "  5. Exit.\n" +
+                    "\n" +
+                    "  Enter an option (1, 2, 3, 4 or 5):");
+            int userNumber = userInput.getInt(1, 5);
+            return userNumber;
+    }
+
+    public static void methodSelector(Path p, List<String> list){
+        int userNumber = displayMainMenu();
+        switch (userNumber) {
+            case 1:
+                showAllContacts(p, list);
+                break;
+            case 2:
+                addNewContact(p, list);
+                break;
+            case 3:
+                searchContactByName(p, list);
+                break;
+            case 4:
+                removeContact(p, list);
+                break;
+            default:
+                System.out.println("Goodbye!");
+                break;
+        }
+    }
+
+    public static void initializeApp() {
+        Path p = Paths.get("data", "contacts.txt");
+        List<String> contacts = new ArrayList<>();
+        methodSelector(p, contacts);
+    }
+
+
+
 
 
 
@@ -117,9 +163,13 @@ public class ContactTools {
 
 //        removeContact(p, contacts, "Corey");
 
-        searchContactByName(p, contacts);
+//        searchContactByName(p, contacts);
 
 //        removeContact(p, contacts);
+
+//        System.out.println(displayMainMenu());
+
+//        methodSelector(p, contacts);
     }
 
 
