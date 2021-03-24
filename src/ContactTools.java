@@ -13,6 +13,7 @@ import java.util.Scanner;
 public class ContactTools {
 
     public static void showAllContacts(Path p, List<String> list) {
+        Input input = new Input();
         try{
             System.out.println("Name | Phone number\n-----------------");
             list = Files.readAllLines(p);
@@ -21,6 +22,12 @@ public class ContactTools {
             }
         } catch (IOException e) {
             e.printStackTrace();
+        }
+        System.out.println("Would you like to return to the main menu? (y/n): ");
+        if (input.yesNo()){
+            initializeApp();
+        } else {
+            System.out.println("Goodbye!");
         }
     }
 
@@ -47,11 +54,10 @@ public class ContactTools {
     }
 
     public static void searchContactByName(Path p, List<String> list){
-        Scanner sc = new Scanner(System.in);
-        String name;
+        Input input = new Input();
         System.out.println("Search contact by name!");
         System.out.println("Please enter name: ");
-        name = sc.nextLine();
+        String name = input.getString();
         List<String> contactToSearch = new ArrayList<>();
         try{
             list = Files.readAllLines(p);
@@ -63,8 +69,7 @@ public class ContactTools {
                 } if(contactToSearch.size() == 0) {
                     System.out.println("Contact does not exist");
                     System.out.println("Would you like to try again?");
-                    String userChoice = sc.nextLine();
-                    if (userChoice.equalsIgnoreCase("y") || userChoice.equalsIgnoreCase("yes")){
+                    if (input.yesNo()){
                         searchContactByName(p, list);
                     } else {
                         methodSelector(p, list);
@@ -73,16 +78,20 @@ public class ContactTools {
             }
          catch(IOException e){
             e.printStackTrace();
+        } System.out.println("Would you like to keep searching? (y/n): ");
+        if (input.yesNo()){
+            searchContactByName(p, list);
+        } else {
+            initializeApp();
         }
 
     }
 
 
     public static void removeContact(Path p, List<String> list) {
-        Scanner sc = new Scanner(System.in);
-        String name;
+        Input input = new Input();
         System.out.println("Please enter name of contact you would like to remove:");
-        name = sc.nextLine();
+        String name = input.getString();
         List<String> contactToBeRemoved = new ArrayList<>();
         try {
             list = Files.readAllLines(p);
@@ -99,6 +108,12 @@ public class ContactTools {
             Files.write(p, list);
         } catch (IOException e) {
             e.printStackTrace();
+        }
+        System.out.println("Would you like to delete another contact? (y/n): ");
+        if (input.yesNo()){
+            removeContact(p, list);
+        } else {
+            initializeApp();
         }
     }
 
@@ -156,8 +171,8 @@ public class ContactTools {
 
     // ------------------------------------------------------ Main Test Method:
     public static void main(String[] args) {
-        Path p = Paths.get("data", "contacts.txt");
-        List<String> contacts = new ArrayList<>();
+//        Path p = Paths.get("data", "contacts.txt");
+//        List<String> contacts = new ArrayList<>();
 //        showAllContacts(p, contacts);
 //        addNewContact(p, contacts);
 
@@ -170,6 +185,7 @@ public class ContactTools {
 //        System.out.println(displayMainMenu());
 
 //        methodSelector(p, contacts);
+        initializeApp();
     }
 
 
